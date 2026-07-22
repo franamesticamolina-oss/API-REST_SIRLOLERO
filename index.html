@@ -2,24 +2,424 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Inventario | cbf </title>
+    <title>Sistema de despacho</title>
 
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-    <main>
+    <header class="encabezado">
+        <div>
+            <p class="encabezado__etiqueta">
+                Sistema de inventario
+            </p>
 
-        <button id="Crear">Crear registro del producto: </button>
-        
-        <p id="resultado"></p>
+            <h1>Gestión de usuarios, productos y despacho</h1>
+        </div>
+
+        <div class="encabezado__estado">
+            <span id="estado-api" class="estado estado--esperando">
+                Comprobando API
+            </span>
+        </div>
+    </header>
+
+    <main class="contenedor">
+
+        <!-- =====================================================
+             MENSAJES
+             ===================================================== -->
+
+        <div
+            id="mensaje-global"
+            class="mensaje"
+            hidden
+        ></div>
+
+        <!-- =====================================================
+             CRUD DE USUARIOS
+             ===================================================== -->
+
+        <section class="panel">
+            <div class="panel__encabezado">
+                <div>
+                    <span class="numero-seccion">01</span>
+                    <h2>Usuarios</h2>
+                    <p>Registrar y administrar destinatarios.</p>
+                </div>
+            </div>
+
+            <div class="distribucion">
+                <form
+                    id="formulario-usuario"
+                    class="formulario"
+                >
+                    <input
+                        type="hidden"
+                        id="usuario-id"
+                    >
+
+                    <div class="campo">
+                        <label for="usuario-nombre">
+                            Nombre del usuario
+                        </label>
+
+                        <input
+                            type="text"
+                            id="usuario-nombre"
+                            placeholder="Ejemplo: Francisco Améstica"
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="usuario-email">
+                            Correo electrónico
+                        </label>
+
+                        <input
+                            type="email"
+                            id="usuario-email"
+                            placeholder="usuario@correo.cl"
+                            maxlength="150"
+                            required
+                        >
+                    </div>
+
+                    <div class="botones-formulario">
+                        <button
+                            type="submit"
+                            class="boton boton--principal"
+                            id="guardar-usuario"
+                        >
+                            Guardar usuario
+                        </button>
+
+                        <button
+                            type="button"
+                            class="boton boton--secundario"
+                            id="cancelar-edicion-usuario"
+                            hidden
+                        >
+                            Cancelar edición
+                        </button>
+                    </div>
+                </form>
+
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabla-usuarios">
+                            <tr>
+                                <td colspan="4" class="tabla-vacia">
+                                    Cargando usuarios...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             CRUD DE PRODUCTOS
+             ===================================================== -->
+
+        <section class="panel">
+            <div class="panel__encabezado">
+                <div>
+                    <span class="numero-seccion">02</span>
+                    <h2>Productos</h2>
+                    <p>Administrar el inventario disponible.</p>
+                </div>
+            </div>
+
+            <div class="distribucion">
+                <form
+                    id="formulario-producto"
+                    class="formulario"
+                >
+                    <input
+                        type="hidden"
+                        id="producto-id"
+                    >
+
+                    <div class="campo">
+                        <label for="producto-nombre">
+                            Nombre del producto
+                        </label>
+
+                        <input
+                            type="text"
+                            id="producto-nombre"
+                            placeholder="Ejemplo: Teclado mecánico"
+                            maxlength="150"
+                            required
+                        >
+                    </div>
+
+                    <div class="fila-campos">
+                        <div class="campo">
+                            <label for="producto-cantidad">
+                                Cantidad
+                            </label>
+
+                            <input
+                                type="number"
+                                id="producto-cantidad"
+                                min="0"
+                                step="1"
+                                value="0"
+                                required
+                            >
+                        </div>
+
+                        <div class="campo">
+                            <label for="producto-precio">
+                                Precio unitario
+                            </label>
+
+                            <input
+                                type="number"
+                                id="producto-precio"
+                                min="0"
+                                step="1"
+                                value="0"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="botones-formulario">
+                        <button
+                            type="submit"
+                            class="boton boton--principal"
+                            id="guardar-producto"
+                        >
+                            Guardar producto
+                        </button>
+
+                        <button
+                            type="button"
+                            class="boton boton--secundario"
+                            id="cancelar-edicion-producto"
+                            hidden
+                        >
+                            Cancelar edición
+                        </button>
+                    </div>
+                </form>
+
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Valor stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabla-productos">
+                            <tr>
+                                <td colspan="6" class="tabla-vacia">
+                                    Cargando productos...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             GUÍA DE DESPACHO
+             ===================================================== -->
+
+        <section class="panel panel--despacho">
+            <div class="panel__encabezado">
+                <div>
+                    <span class="numero-seccion">03</span>
+                    <h2>Guía de despacho</h2>
+                    <p>
+                        Selecciona un destinatario y agrega productos.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="boton boton--imprimir"
+                    id="imprimir-guia"
+                >
+                    Imprimir guía
+                </button>
+            </div>
+
+            <div class="guia">
+                <div class="guia__cabecera">
+                    <div class="empresa">
+                        <h3>Mi empresa</h3>
+                        <p>Documento interno de despacho</p>
+                        <p>Chile</p>
+                    </div>
+
+                    <div class="folio">
+                        <span>Guía de despacho</span>
+                        <strong id="numero-guia">N.º 000001</strong>
+                        <small id="fecha-guia"></small>
+                    </div>
+                </div>
+
+                <div class="destinatario">
+                    <h3>Datos del destinatario</h3>
+
+                    <div class="destinatario__contenido">
+                        <div class="campo">
+                            <label for="guia-usuario">
+                                Seleccionar usuario
+                            </label>
+
+                            <select id="guia-usuario">
+                                <option value="">
+                                    Seleccione un usuario
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="datos-seleccionados">
+                            <p>
+                                <span>Nombre:</span>
+                                <strong id="guia-usuario-nombre">
+                                    Sin seleccionar
+                                </strong>
+                            </p>
+
+                            <p>
+                                <span>Correo:</span>
+                                <strong id="guia-usuario-email">
+                                    Sin seleccionar
+                                </strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agregar-producto-guia">
+                    <div class="campo">
+                        <label for="guia-producto">
+                            Producto
+                        </label>
+
+                        <select id="guia-producto">
+                            <option value="">
+                                Seleccione un producto
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="guia-cantidad">
+                            Cantidad a despachar
+                        </label>
+
+                        <input
+                            type="number"
+                            id="guia-cantidad"
+                            min="1"
+                            step="1"
+                            value="1"
+                        >
+                    </div>
+
+                    <button
+                        type="button"
+                        class="boton boton--principal"
+                        id="agregar-producto-guia"
+                    >
+                        Agregar a la guía
+                    </button>
+                </div>
+
+                <div class="tabla-contenedor tabla-guia">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio unitario</th>
+                                <th>Subtotal</th>
+                                <th class="no-imprimir">Acción</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabla-guia">
+                            <tr>
+                                <td colspan="6" class="tabla-vacia">
+                                    No se han agregado productos.
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    Total
+                                </td>
+
+                                <td id="total-guia">
+                                    $0
+                                </td>
+
+                                <td class="no-imprimir"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="observaciones">
+                    <label for="guia-observaciones">
+                        Observaciones
+                    </label>
+
+                    <textarea
+                        id="guia-observaciones"
+                        rows="4"
+                        placeholder="Ingrese información adicional del despacho..."
+                    ></textarea>
+                </div>
+
+                <div class="acciones-guia no-imprimir">
+                    <button
+                        type="button"
+                        class="boton boton--peligro"
+                        id="limpiar-guia"
+                    >
+                        Limpiar guía
+                    </button>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <script src="/app.js"></script>
+    <script src="/js/app.js"></script>
 </body>
 </html>
